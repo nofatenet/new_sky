@@ -3,7 +3,7 @@ const ctx = cvs.getContext("2d");
 
 // Images:
 let canyon = new Image;
-canyon.src = "./images/canyon.png"; // 512x512 px
+canyon.src = "./images/canyon.png"; // 512x1024 px
 let bat = new Image;
 bat.src = "./images/bat.png"; // The Bat? Again!?
 let enemies = new Image;
@@ -28,6 +28,8 @@ function speedTest(){
     }
     // Display Speed in the HTML:
     document.querySelector(".speedMeter .speed").innerHTML = speed;
+    // Show Speed in the Fog (in css):
+    document.querySelector("#scoreBoard").style.opacity = 0.1 * speed / 2 + 0.3;
 }
 
 // Player Pos.:
@@ -36,6 +38,8 @@ let posY = 600;
 // Enemy Pos:
 let EposX = 160;
 let EposY = 400;
+let EposX2 = Math.round(Math.random() * 320+80);
+let EposY2 = Math.round(Math.random() * 320-80);
 
 const PADDLE_img = new Image();
 PADDLE_img.src = "img/paddel2.png";
@@ -89,6 +93,9 @@ function HitTest(){
 function enemiesSpawn(){
     ctx.drawImage(enemies, enemyNo * 60, 0, 60, 124, EposX, EposY, 60, 124);
 }
+function enemiesSpawn2(){
+    ctx.drawImage(enemies, enemyNo * 60, 0, 60, 124, EposX2, EposY2, 60, 124);
+}
 // Enemy Speed:
 function Espeed(){
     Espeedy = speed/4 + eOwnSpeed;
@@ -112,6 +119,13 @@ function Espeed(){
         console.log(player.x);
         console.log(enemy.x);
     }
+    // Enemy Number 2
+    EposY2 += Espeedy;
+    if(EposY2 >= 800){
+        EposY2 = 0;
+        EposX2 = Math.round(Math.random() * 320 + 80);
+    }
+
 }
 
 // Controls:
@@ -168,6 +182,7 @@ function Loop(){
     drawPlayer();
 
     enemiesSpawn();
+    enemiesSpawn2();
     Espeed();
 
     ThePositions();

@@ -68,7 +68,8 @@ canvas {
     bottom: 0px;
     height: 720px;
     display: flex;
-    background-image: linear-gradient(to top, rgba(220,172,160,0.2), rgba(11,11,111,0));
+    background-image: linear-gradient(to top, rgba(220,172,160,0.4), rgba(11,11,111,0));
+    opacity: 0.6;
 }
 
 #scoreBoard .innerBoard .speedMeter .speed {
