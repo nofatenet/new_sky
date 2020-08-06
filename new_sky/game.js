@@ -11,8 +11,8 @@ enemies.src = "./images/enemies1.png";
 let enemyNo = Math.round(Math.random() * 4); // There are 5 in the Sprite(0-4)
 
 let eOwnSpeed = 1;
-
 let passed = 0;
+let damage = 0;
 
 // Player Speed:
 let speed = 2;
@@ -38,8 +38,8 @@ let posY = 600;
 // Enemy Pos:
 let EposX = 160;
 let EposY = 400;
-let EposX2 = Math.round(Math.random() * 320+80);
-let EposY2 = Math.round(Math.random() * 320-80);
+//let EposX2 = Math.round(Math.random() * 320+80);
+//let EposY2 = Math.round(Math.random() * 320-80);
 
 const PADDLE_img = new Image();
 PADDLE_img.src = "img/paddel2.png";
@@ -54,34 +54,43 @@ function drawPlayer() {
 }
 
 const player = {
-    width: 100,
-    height: 100,
+    width: 10,
+    height: 10,
     x: posX,
     y: posY
 }
 const enemy = {
-    width: 100,
-    height: 100,
+    width: 10,
+    height: 10,
     x: EposX,
     y: EposY
 }
 
 function ThePositions(){
-
-player.x = posX;
-enemy.x = EposX;
-
+    player.x = posX;
+    enemy.x = EposX;
 }
 
+function HitTest(){
+    if (player.x < EposX + enemy.width &&
+        player.x + player.width > EposX &&
+        player.y < EposY + enemy.height &&
+        player.y + player.height > EposY) {
+        
+        damage++;
+
+        console.log("collision! " + damage);
+    }
+}
 /*
 function HitTest(){
-
     if(
         // (enemy.x + enemy.width < player.x + player.width && enemy.x > player.x && player.y > player.height && enemy.y > player.y)    
     ){
             console.log("%cHIT", "color: #c80");
     }
 }
+*/
 /*
         ((player.y + player.height) < (enemy.y)) ||
         (player.y > (enemy.y + enemy.height)) ||
@@ -93,9 +102,9 @@ function HitTest(){
 function enemiesSpawn(){
     ctx.drawImage(enemies, enemyNo * 60, 0, 60, 124, EposX, EposY, 60, 124);
 }
-function enemiesSpawn2(){
-    ctx.drawImage(enemies, enemyNo * 60, 0, 60, 124, EposX2, EposY2, 60, 124);
-}
+// function enemiesSpawn2(){
+//     ctx.drawImage(enemies, enemyNo * 60, 0, 60, 124, EposX2, EposY2, 60, 124);
+// }
 // Enemy Speed:
 function Espeed(){
     Espeedy = speed/4 + eOwnSpeed;
@@ -120,21 +129,21 @@ function Espeed(){
         console.log(enemy.x);
     }
     // Enemy Number 2
-    EposY2 += Espeedy;
-    if(EposY2 >= 800){
-        EposY2 = 0;
-        EposX2 = Math.round(Math.random() * 320 + 80);
-    }
+    // EposY2 += Espeedy;
+    // if(EposY2 >= 800){
+    //     EposY2 = 0;
+    //     EposX2 = Math.round(Math.random() * 320 + 80);
+    // }
 
 }
 
 // Controls:
 function moveLeft(){
-    posX -= 4;
+    posX -= 6;
     if(posX <= 120){ posX = 120 }; // Game Area Limit - Left Wall
 }
 function moveRight(){
-    posX += 4;
+    posX += 6;
     if(posX >= 360){ posX = 360 }; // Game Area Limit - Right Wall
 }
 
@@ -182,11 +191,11 @@ function Loop(){
     drawPlayer();
 
     enemiesSpawn();
-    enemiesSpawn2();
+    //enemiesSpawn2();
     Espeed();
 
     ThePositions();
-    //HitTest();
+    HitTest();
 
     requestAnimationFrame(Loop);
 }
