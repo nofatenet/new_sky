@@ -41,8 +41,6 @@ let EposY = 400;
 //let EposX2 = Math.round(Math.random() * 320+80);
 //let EposY2 = Math.round(Math.random() * 320-80);
 
-const PADDLE_img = new Image();
-PADDLE_img.src = "img/paddel2.png";
 
 function drawPlayer() {
     //ctx.fillStyle = "#777";
@@ -72,31 +70,16 @@ function ThePositions(){
 }
 
 function HitTest(){
-    if (player.x < EposX + enemy.width &&
-        player.x + player.width > EposX &&
-        player.y < EposY + enemy.height &&
-        player.y + player.height > EposY) {
+    if (posX < EposX + enemy.width &&
+        posX + player.width > EposX &&
+        posY < EposY + enemy.height &&
+        posY + player.height > EposY) {
         
         damage++;
 
         console.log("collision! " + damage);
     }
 }
-/*
-function HitTest(){
-    if(
-        // (enemy.x + enemy.width < player.x + player.width && enemy.x > player.x && player.y > player.height && enemy.y > player.y)    
-    ){
-            console.log("%cHIT", "color: #c80");
-    }
-}
-*/
-/*
-        ((player.y + player.height) < (enemy.y)) ||
-        (player.y > (enemy.y + enemy.height)) ||
-        ((player.x + player.width) < enemy.x) ||
-        (player.x > (enemy.x + enemy.width))
-*/
 
 // Enemies:
 function enemiesSpawn(){
@@ -134,38 +117,67 @@ function Espeed(){
     //     EposY2 = 0;
     //     EposX2 = Math.round(Math.random() * 320 + 80);
     // }
-
 }
 
-// Controls:
-function moveLeft(){
-    posX -= 6;
-    if(posX <= 120){ posX = 120 }; // Game Area Limit - Left Wall
-}
-function moveRight(){
-    posX += 6;
-    if(posX >= 360){ posX = 360 }; // Game Area Limit - Right Wall
-}
-
-document.addEventListener("keydown", (event) => {
-    // console.log(event.keyCode); // See what the Code of the Key is
-    switch(event.keyCode){
-        case 37: // Left Arrow Key - Go left
-            moveLeft();
-            break;
-        case 38: // Up Arrow Key - Speed up
-            speed += 1;
-            break;
-        case 39: // Right Arrow Key - Go right
-            moveRight();
-            break;
-        case 40: // Down Arrow Key - Slow down
-            speed -= 4;
-            break;
-        default:
-            break;
+// control keys:
+document.addEventListener("keydown", function(event) {
+    if (event.keyCode == 37) {
+        leftArrow = true;
+    } else if(event.keyCode == 39) {
+        rightArrow = true;
     }
 });
+document.addEventListener("keyup", function(event) {
+    if (event.keyCode == 37) {
+        leftArrow = false;
+    } else if(event.keyCode == 39) {
+        rightArrow = false;
+    }
+});
+
+
+let leftArrow = false;
+let rightArrow = false;
+let upArrow = false;
+let downArrow = false;
+
+// move player:
+function movePlayer() {
+    if(rightArrow && player.x < 440) {
+        posX += 4;
+    } else if(leftArrow && player.x > 60) {
+        posX -= 4;
+    } else if(upArrow) {
+        speed += 1;
+    } else if(downArrow) {
+        speed -= 2;
+    }
+}
+
+// control keys:
+document.addEventListener("keydown", function(event) {
+    if (event.keyCode == 37) {
+        leftArrow = true;
+    } else if(event.keyCode == 39) {
+        rightArrow = true;
+    } else if(event.keyCode == 38) {
+        upArrow = true;
+    } else if(event.keyCode == 40) {
+        downArrow = true;
+    }
+});
+document.addEventListener("keyup", function(event) {
+    if (event.keyCode == 37) {
+        leftArrow = false;
+    } else if(event.keyCode == 39) {
+        rightArrow = false;
+    } else if(event.keyCode == 38) {
+        upArrow = false;
+    } else if(event.keyCode == 40) {
+        downArrow = false;
+    }
+});
+
 
 // Game-Loop:
 canyon.onload = () => {
@@ -189,6 +201,7 @@ function Loop(){
     ctx.drawImage(bat, posX, posY);
 
     drawPlayer();
+    movePlayer();
 
     enemiesSpawn();
     //enemiesSpawn2();
